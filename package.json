@@ -1,0 +1,19 @@
+{
+  "name": "project-vmo-f8",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HoangDien17/Project-VMO-F8.git"
+  },
+  "author": "Hoang Dien",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HoangDien17/Project-VMO-F8/issues"
+  },
+  "homepage": "https://github.com/HoangDien17/Project-VMO-F8#readme"
+}
