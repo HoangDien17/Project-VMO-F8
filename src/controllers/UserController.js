@@ -1,9 +1,19 @@
 const UserService = require('../services/userService');
+const { validationResult } = require('express-validator');
 
 let apiCreateUser = async (req, res) => {
-  const {statusCode, message, data} = await UserService.apiCreateUser(req.body);
-  return res.status(statusCode).send({statusCode, message, data});
-};
+  let validationErrors = validationResult(req);
+  if (validationErrors.isEmpty()) {
+    const {statusCode, message, data} = await UserService.apiCreateUser(req.body);
+    return res.status(statusCode).send({statusCode, message, data});
+  }
+  else {
+    let errors = Object.values(validationErrors.mapped());
+    let arrError = [];
+    arrError = errors.map(item=>item.msg)
+    res.status(400).send({message: arrError});
+    }
+}
 
 let apiLoginUser = async (req, res) => {
   const {statusCode, message, data} = await UserService.apiLoginUser(req.body);

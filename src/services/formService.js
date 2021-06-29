@@ -64,7 +64,7 @@ let apiCreateForm = async (dataClient, id) => {
     let emailArray = allUser.map(item => item.email);
     let userConfirm = await db.Information.findOne({where: {UserId: dataClient.UserId}});
     let template = `<h1>Notification :</h1>
-                    <h3><span style="color: red">${userConfirm.firstName} ${userConfirm.lastName}</span> <span style="color: yellow">${dataClient.typeForm}</span> form created successfully </h3>`
+                    <h3><span style="color: red">${userConfirm.firstName} ${userConfirm.lastName}</span> <span style="color: green">${dataClient.typeForm}</span> form created successfully </h3>`
     let subject = "CREATED FORM";
 
     sendMail(emailArray, subject, template)
