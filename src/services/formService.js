@@ -60,16 +60,25 @@ let apiCreateForm = async (dataClient, id) => {
     }
     let newItem = { ...dataClient, status: "new" }
     let newForm = await db.Form.create(newItem);
-    let allUser = await db.Information.findAll({});
-    let emailArray = allUser.map(item => item.email);
+   
+    let allUser = await db.User.findAll({where: {role: {[Op.like]: "%Employee%"}}, include: 
+      [{ model: db.Information, attributes: ['email']}]
+    })
+    let emailArray = allUser.map(item => item.Information.email);
+
     let userConfirm = await db.Information.findOne({where: {UserId: dataClient.UserId}});
-    let template = `<h1>Notification :</h1>
-                    <h3><span style="color: red">${userConfirm.firstName} ${userConfirm.lastName}</span> <span style="color: green">${dataClient.typeForm}</span> form created successfully </h3>`
-    let subject = "CREATED FORM";
+    let template = `<h1>Thông báo :</h1>
+                    <h3>Họ tên: ${userConfirm.firstName} ${userConfirm.lastName}</h3>
+                    <h3>Ngày sinh: ${userConfirm.dob}</h3>
+                    <h3>Địa chỉ: ${userConfirm.address}</h3>
+                    <h3>Email: ${userConfirm.email}</h3>
+                    <h3>SĐT: ${userConfirm.phone}</h3>
+                    <h3>Form của <span style="color: red">${userConfirm.firstName} ${userConfirm.lastName}</span> <span style="color: green">${dataClient.typeForm}</span> được tạo thành công. </h3>`
+    let subject = "TẠO FORM ";
 
     sendMail(emailArray, subject, template)
     .then(success => {
-      response.data = newForm;
+      response.data = newItem;
     })
     .catch(error => {
       console.log(error);
