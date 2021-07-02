@@ -12,5 +12,3 @@ const Auth = (arrRole) => {
 }
 
 module.exports = {Auth};
-
-

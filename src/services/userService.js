@@ -43,8 +43,7 @@ let apiLoginUser = async (data) => {
   try {
     let { username, password} = data;
     let user = await db.User.findOne({where: {username: username}});
-    let match = await bcrypt.compare(password, user.password);
-    if(!user || !match) {
+    if(!user || !bcrypt.compareSync(password, user.password)) {
       return {
         statusCode: 404,
         message: "Wrong user or password",

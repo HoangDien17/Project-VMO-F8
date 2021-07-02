@@ -78,7 +78,7 @@ let apiCreateForm = async (dataClient, id) => {
 
     sendMail(emailArray, subject, template)
     .then(success => {
-      response.data = newItem;
+      response.data = newForm;
     })
     .catch(error => {
       console.log(error);
@@ -267,7 +267,8 @@ let apiGetUndoneAssessment = async (limit, page) => {
     data: {}
   }
   try {
-    let dateNow = new Date(Date.now()).toJSON()
+    let dateNow = new Date();
+    console.log(object);
     let result = await db.Form.findAndCountAll({where: {
                     [Op.and]: [{typeForm: {[Op.like]: "%Assessment%"}},{[Op.or]: [{status: {[Op.notLike]: "%done%"}}, sequelize.where(sequelize.fn('date', sequelize.col('endDate')), '>', `${dateNow}`)]}]
                   }, limit: limit, offset: page*limit});
