@@ -7,5 +7,8 @@ const AuthenToken = require('../middlewares/authenToken');
 
 module.exports = (fix) => {
   fix.use("/users", AuthenToken, router);
+  router.get("/", Authorization.Auth(['Admin']), UserController.apiGetAllUser);
   router.put("/:id", Authorization.Auth(['Admin']), UserController.apiUpdateRole);
+  router.delete("/:id", Authorization.Auth(['Admin']), UserController.apiDeleteUser);
+  router.patch("/", UserController.apiChangePassword);
 }

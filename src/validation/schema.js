@@ -36,7 +36,7 @@ const createInforSchema = Joi.object({
     .required(),
   email: Joi.string()
     .required()
-    .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
+    .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'vn'] } }),
   phone: Joi.string()
     .required()
     .pattern(new RegExp('^(0)[0-9]{9,10}$')),

@@ -27,4 +27,24 @@ let apiUpdateRole = async (req, res) => {
   return res.status(statusCode).send({statusCode, message, data});
 }
 
-module.exports = { apiCreateUser, apiLoginUser, apiUpdateRole }
+let apiDeleteUser = async (req, res) => {
+  let confirmId = req.params.id;
+  const {statusCode, message, data} = await UserService.apiDeleteUser(confirmId);
+  return res.status(statusCode).send({statusCode, message, data});
+}
+
+let apiChangePassword = async (req, res) => {
+  let confirmId = req.payload.id;
+  let newPassword = req.body.password;
+  const {statusCode, message, data} = await UserService.apiChangePassword(confirmId, newPassword);
+  return res.status(statusCode).send({statusCode, message, data});
+}
+
+let apiGetAllUser = async (req, res) => {
+  const limit = 5;
+  let page = req.query.page;
+  const {statusCode, message, data} = await UserService.apiGetAllUser(limit, page);
+  return res.status(statusCode).send({statusCode, message, data});
+}
+
+module.exports = { apiCreateUser, apiLoginUser, apiUpdateRole, apiDeleteUser,apiChangePassword, apiGetAllUser }

@@ -78,11 +78,12 @@ let apiCreateForm = async (dataClient, id) => {
 
     sendMail(emailArray, subject, template)
     .then(success => {
-      response.data = newForm;
+      console.log(object);
     })
     .catch(error => {
-      console.log(error);
+      console.log(success);
     })
+    response.data = newForm;
   } catch (error) {
     response.statusCode = 500;
     response.message = error.message;
@@ -247,7 +248,7 @@ let apiGetUndoneProbationary = async (limit, page) => {
     data: {}
   }
   try {
-    let dateNow = new Date(Date.now()).toJSON()
+    let dateNow = new Date();
     let result = await db.Form.findAndCountAll({where: {
                     [Op.and]: [{typeForm: {[Op.like]: "%Probationary%"}},{[Op.or]: [{status: {[Op.notLike]: "%done%"}}, sequelize.where(sequelize.fn('date', sequelize.col('endDate')), '>', `${dateNow}`)]}]
                   }, limit: limit, offset: page*limit});
