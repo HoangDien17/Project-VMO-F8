@@ -1,43 +1,49 @@
-const { Op } = require('sequelize');
-const db = require('../models');
-const sequelize = require('sequelize');
-const _ = require('lodash');
-const sendMail = require('../config/mailer');
+const { Op } = require("sequelize");
+const db = require("../models");
+const sequelize = require("sequelize");
+const _ = require("lodash");
+const sendMail = require("../config/mailer");
 
 let apiCreateForm = async (dataClient, id) => {
   const response = {
     statusCode: 200,
     message: "Create form successful",
-    data: {}
-  }
+    data: {},
+  };
   try {
     //Kiểm tra mỗi user - chỉ đc có 1 form chưa closed
     let formNotClosed = await db.Form.findAll({
       where: {
-        [Op.and]: [{ UserId: dataClient.UserId }, { status: { [Op.notLike]: '%done%' } }]
-      }
-    })
+        [Op.and]: [
+          { UserId: dataClient.UserId },
+          { status: { [Op.notLike]: "%done%" } },
+        ],
+      },
+    });
     if (formNotClosed.length !== 0) {
       return {
         statusCode: 409,
         message: "Only one form not closed exists",
-        data: {}
-      }
+        data: {},
+      };
     }
 
     // kiểm tra mỗi user - 1 form thử việc
     let formProbationaryByUser = await db.Form.findOne({
       where: {
-        [Op.and]: [{ UserId: dataClient.UserId }, { typeForm: { [Op.like]: `%${dataClient.typeForm}%` } }]
-      }
-    })
+        [Op.and]: [
+          { UserId: dataClient.UserId },
+          { typeForm: { [Op.like]: `%${dataClient.typeForm}%` } },
+        ],
+      },
+    });
     if (formProbationaryByUser) {
       if (_.includes(["Probationary"], formProbationaryByUser.typeForm)) {
         return {
           statusCode: 409,
           message: "Form Probationary already exists.",
-          data: {}
-        }
+          data: {},
+        };
       }
     }
     // Kiểm tra 1 user - 1 form định kì năm nay đã tồn tại hay chưa.
@@ -45,44 +51,50 @@ let apiCreateForm = async (dataClient, id) => {
     let checkFormYearByUser = await db.Form.findOne({
       where: {
         [Op.and]: [
-          { typeForm: { [Op.like]: '%Assessment%' } },
+          { typeForm: { [Op.like]: "%Assessment%" } },
           { UserId: dataClient.UserId },
-          sequelize.where(sequelize.fn('YEAR', sequelize.col('startDate')), yearNow)
-        ]
-      }
-    })
+          sequelize.where(
+            sequelize.fn("YEAR", sequelize.col("startDate")),
+            yearNow
+          ),
+        ],
+      },
+    });
     if (checkFormYearByUser) {
       return {
         statusCode: 409,
         message: `Form Assessment of ${yearNow} already exists.`,
-        data: {}
-      }
+        data: {},
+      };
     }
-    let newItem = { ...dataClient, status: "new" }
+    let newItem = { ...dataClient, status: "new" };
     let newForm = await db.Form.create(newItem);
-   
-    let allUser = await db.User.findAll({where: {role: {[Op.like]: "%Employee%"}}, include: 
-      [{ model: db.Information, attributes: ['email']}]
-    })
-    let emailArray = allUser.map(item => item.Information.email);
 
-    let userConfirm = await db.Information.findOne({where: {UserId: dataClient.UserId}});
+    let allUser = await db.User.findAll({
+      where: { role: { [Op.like]: "%Employee%" } },
+      include: [{ model: db.Information, attributes: ["email"] }],
+    });
+    let emailArray = allUser.map((item) => item.Information.email);
+
+    let userConfirm = await db.Information.findOne({
+      where: { UserId: dataClient.UserId },
+    });
     let template = `<h1>Thông báo :</h1>
                     <h3>Họ tên: ${userConfirm.firstName} ${userConfirm.lastName}</h3>
                     <h3>Ngày sinh: ${userConfirm.dob}</h3>
                     <h3>Địa chỉ: ${userConfirm.address}</h3>
                     <h3>Email: ${userConfirm.email}</h3>
                     <h3>SĐT: ${userConfirm.phone}</h3>
-                    <h3>Form của <span style="color: red">${userConfirm.firstName} ${userConfirm.lastName}</span> <span style="color: green">${dataClient.typeForm}</span> được tạo thành công. </h3>`
+                    <h3>Form của <span style="color: red">${userConfirm.firstName} ${userConfirm.lastName}</span> <span style="color: green">${dataClient.typeForm}</span> được tạo thành công. </h3>`;
     let subject = "TẠO FORM ";
 
     sendMail(emailArray, subject, template)
-    .then(success => {
-      console.log(object);
-    })
-    .catch(error => {
-      console.log(success);
-    })
+      .then((success) => {
+        console.log(success);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     response.data = newForm;
   } catch (error) {
     response.statusCode = 500;
@@ -95,8 +107,8 @@ let apiGetFormMySelf = async (UserId) => {
   const response = {
     statusCode: 200,
     message: "Get form by myself successful",
-    data: {}
-  }
+    data: {},
+  };
   try {
     let formMySelf = await db.Form.findAll({ where: { UserId: UserId } });
     response.data = formMySelf;
@@ -111,10 +123,14 @@ let apiGetFormSubordinates = async (UserId, limit, page) => {
   const response = {
     statusCode: 200,
     message: "Get form subordinates successful",
-    data: {}
-  }
+    data: {},
+  };
   try {
-    let formSubordinates = await db.Form.findAll({ where: { managerId: UserId }, limit: limit, offset: limit*page });
+    let formSubordinates = await db.Form.findAll({
+      where: { managerId: UserId },
+      limit: limit,
+      offset: limit * page,
+    });
     response.data = formSubordinates;
   } catch (error) {
     response.statusCode = 500;
@@ -127,59 +143,68 @@ let apiGetFormAll = async (limit, page) => {
   const response = {
     statusCode: 200,
     message: "Get form all successful",
-    data: {}
-  }
+    data: {},
+  };
   try {
-    let formGetAll = await db.Form.findAll({limit: limit, offset: page*limit});
+    let formGetAll = await db.Form.findAll({
+      limit: limit,
+      offset: page * limit,
+    });
     response.data = formGetAll;
   } catch (error) {
     response.statusCode = 500;
     response.message = error.message;
   }
   return response;
-}
+};
 // Cần xem lại.......
 let apiSubmittedForm = async (dataClient, UserId) => {
   const response = {
     statusCode: 200,
     message: "Update form by myself successful",
-    data: {}
-  }
+    data: {},
+  };
   try {
-    // Kiểm tra chỉ được chỉnh sửa form của bản thân 
+    // Kiểm tra chỉ được chỉnh sửa form của bản thân
     let checkForm = await db.Form.findOne({ where: { id: dataClient.id } });
     if (checkForm.UserId !== UserId) {
       return {
         statusCode: 403,
         message: "You can't edit form of other user",
-        data: {}
-      }
+        data: {},
+      };
     }
-    let submitForm = await db.Form.update({ content: dataClient.content, status: "submitted" }, { where: { id: id } }); /// Chú ý 
+    let submitForm = await db.Form.update(
+      { content: dataClient.content, status: "submitted" },
+      { where: { id: dataClient.id } }
+    ); /// Chú ý
     response.data = submitForm;
   } catch (error) {
     response.statusCode = 500;
     response.message = error.message;
   }
   return response;
-}
+};
 
 let apiPendingApprovalForm = async (idForm, UserId) => {
   const response = {
     statusCode: 200,
-    message: "Submitted form successful",
-    data: {}
-  }
+    message: "Pending approval form successful",
+    data: {},
+  };
   try {
     let checkForm = await db.Form.findOne({ where: { id: idForm } });
     if (checkForm.UserId !== UserId) {
       return {
         statusCode: 403,
         message: "You can't submit form of other user",
-        data: {}
-      }
+        data: {},
+      };
     }
-    let pendingForm = await db.Form.update({ status: "pending approval" }, { where: { id: idForm } }); /// Chú ý 
+    let pendingForm = await db.Form.update(
+      { status: "pending approval" },
+      { where: { id: idForm } }
+    ); /// Chú ý
     response.data = pendingForm;
   } catch (error) {
     response.statusCode = 500;
@@ -192,19 +217,22 @@ let apiApproveForm = async (dataClient, UserId) => {
   const response = {
     statusCode: 200,
     message: "Approval form successful",
-    data: {}
-  }
+    data: {},
+  };
   try {
-    // check form 
+    // check form
     let checkForm = await db.Form.findOne({ where: { id: dataClient.id } });
     if (checkForm.managerId !== UserId) {
       return {
         statusCode: 403,
         message: "You are not the manager that can approve this form ",
-        data: {}
-      }
+        data: {},
+      };
     }
-    let approveForm = await db.Form.update({ status: "approval", comment: dataClient.comment }, { where: { id: dataClient.id } });
+    let approveForm = await db.Form.update(
+      { status: "approval", comment: dataClient.comment },
+      { where: { id: dataClient.id } }
+    );
     response.data = approveForm;
   } catch (error) {
     response.statusCode = 500;
@@ -217,20 +245,29 @@ let apiConfirmFormByHr = async (idForm) => {
   const response = {
     statusCode: 200,
     message: "Confirm form successful",
-    data: {}
-  }
+    data: {},
+  };
   try {
     let formConfirm = await db.Form.findOne({ where: { id: idForm } });
-    if(formConfirm) {
-      if (!_.includes(['approval'], formConfirm.status ) || Date.now() < new Date(formConfirm.endDate).getTime()) {
+    if (formConfirm) {
+      if (
+        !_.includes(["approval"], formConfirm.status) ||
+        Date.now() < new Date(formConfirm.endDate).getTime()
+      ) {
         return {
           statusCode: 403,
           message: "You are not qualified to close  form",
-          data: {}
-        }
+          data: {},
+        };
       }
-      if (_.includes(['approval'], formConfirm.status) &&  Date.now() >= new Date(formConfirm.endDate).getTime()) {
-        let confirmForm = await db.Form.update({status: "done"}, {where: {id: idForm}});
+      if (
+        _.includes(["approval"], formConfirm.status) &&
+        Date.now() >= new Date(formConfirm.endDate).getTime()
+      ) {
+        let confirmForm = await db.Form.update(
+          { status: "done" },
+          { where: { id: idForm } }
+        );
         response.data = confirmForm;
       }
     }
@@ -244,14 +281,30 @@ let apiConfirmFormByHr = async (idForm) => {
 let apiGetUndoneProbationary = async (limit, page) => {
   const response = {
     statusCode: 200,
-    message: "Report form Pobationary",
-    data: {}
-  }
+    message: "Report uncomplete form Pobationary",
+    data: {},
+  };
   try {
-    let dateNow = new Date();
-    let result = await db.Form.findAndCountAll({where: {
-                    [Op.and]: [{typeForm: {[Op.like]: "%Probationary%"}},{[Op.or]: [{status: {[Op.notLike]: "%done%"}}, sequelize.where(sequelize.fn('date', sequelize.col('endDate')), '>', `${dateNow}`)]}]
-                  }, limit: limit, offset: page*limit});
+    let dateNow = new Date().toJSON();
+    let result = await db.Form.findAndCountAll({
+      where: {
+        [Op.and]: [
+          { typeForm: { [Op.like]: "%Probationary%" } },
+          {
+            [Op.or]: [
+              { status: { [Op.notLike]: "%done%" } },
+              sequelize.where(
+                sequelize.fn("date", sequelize.col("endDate")),
+                ">",
+                `${dateNow}`
+              ),
+            ],
+          },
+        ],
+      },
+      limit: limit,
+      offset: page * limit,
+    });
 
     response.data = result;
   } catch (error) {
@@ -259,27 +312,143 @@ let apiGetUndoneProbationary = async (limit, page) => {
     response.message = error.message;
   }
   return response;
-}
+};
 
 let apiGetUndoneAssessment = async (limit, page) => {
   const response = {
     statusCode: 200,
-    message: "Report form Assessment",
-    data: {}
-  }
+    message: "Report uncomplete form Assessment",
+    data: {},
+  };
   try {
-    let dateNow = new Date();
-    console.log(object);
-    let result = await db.Form.findAndCountAll({where: {
-                    [Op.and]: [{typeForm: {[Op.like]: "%Assessment%"}},{[Op.or]: [{status: {[Op.notLike]: "%done%"}}, sequelize.where(sequelize.fn('date', sequelize.col('endDate')), '>', `${dateNow}`)]}]
-                  }, limit: limit, offset: page*limit});
-                  
+    let dateNow = new Date().toJSON();
+    let result = await db.Form.findAndCountAll({
+      where: {
+        [Op.and]: [
+          { typeForm: { [Op.like]: "%Assessment%" } },
+          {
+            [Op.or]: [
+              { status: { [Op.notLike]: "%done%" } },
+              sequelize.where(
+                sequelize.fn("date", sequelize.col("endDate")),
+                ">",
+                `${dateNow}`
+              ),
+            ],
+          },
+        ],
+      },
+      limit: limit,
+      offset: page * limit,
+    });
+
     response.data = result;
   } catch (error) {
     response.statusCode = 500;
     response.message = error.message;
   }
   return response;
-}
+};
+let apiGetDoneProbationary = async (limit, page) => {
+  const response = {
+    statusCode: 200,
+    message: "Report complete form Probationary",
+    data: {},
+  };
+  try {
+    let dateNow = new Date().toJSON();
+    let result = await db.Form.findAndCountAll({
+      where: {
+        [Op.and]: [
+          { typeForm: { [Op.like]: "%Probationary%" } },
+          {
+            [Op.and]: [
+              { status: { [Op.like]: "%done%" } },
+              sequelize.where(
+                sequelize.fn("date", sequelize.col("endDate")),
+                "<=",
+                `${dateNow}`
+              ),
+            ],
+          },
+        ],
+      },
+      limit: limit,
+      offset: page * limit,
+    });
 
-module.exports = { apiCreateForm, apiGetFormMySelf, apiGetFormSubordinates, apiGetFormAll, apiPendingApprovalForm, apiSubmittedForm, apiApproveForm, apiConfirmFormByHr, apiGetUndoneProbationary, apiGetUndoneAssessment };
+    response.data = result;
+  } catch (error) {
+    response.statusCode = 500;
+    response.message = error.message;
+  }
+  return response;
+};
+let apiGetDoneAssessment = async (limit, page) => {
+  const response = {
+    statusCode: 200,
+    message: "Report complete form Assessment",
+    data: {},
+  };
+  try {
+    let dateNow = new Date().toJSON();
+    let result = await db.Form.findAndCountAll({
+      where: {
+        [Op.and]: [
+          { typeForm: { [Op.like]: "%Assessment%" } },
+          {
+            [Op.and]: [
+              { status: { [Op.like]: "%done%" } },
+              sequelize.where(
+                sequelize.fn("date", sequelize.col("endDate")),
+                "<=",
+                `${dateNow}`
+              ),
+            ],
+          },
+        ],
+      },
+      limit: limit,
+      offset: page * limit,
+    });
+
+    response.data = result;
+  } catch (error) {
+    response.statusCode = 500;
+    response.message = error.message;
+  }
+  return response;
+};
+
+let apiDeleteForm = async (idForm) => {
+  const response = {
+    statusCode: 200,
+    message: "Delete form successful",
+    data: {},
+  };
+  let resultDelete = await db.Form.destroy({ where: { id: idForm } });
+  if (resultDelete !== 1) {
+    return {
+      statusCode: 404,
+      message: "Form not found",
+      data: { resultDelete },
+    };
+  }
+  return response;
+};
+
+module.exports = {
+  apiCreateForm,
+  apiGetFormMySelf,
+  apiGetFormSubordinates,
+  apiGetFormAll,
+  apiPendingApprovalForm,
+  apiSubmittedForm,
+  apiApproveForm,
+  apiConfirmFormByHr,
+  apiGetUndoneProbationary,
+  apiGetUndoneAssessment,
+  apiGetDoneAssessment,
+  apiGetDoneProbationary,
+  apiDeleteForm,
+};

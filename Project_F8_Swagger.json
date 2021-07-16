@@ -1,0 +1,1082 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Project-F8",
+    "contact": {},
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api",
+      "variables": {}
+    }
+  ],
+  "paths": {
+    "/forms/approve": {
+      "put": {
+        "tags": [
+          "Forms"
+        ],
+        "summary": "apiApproveForm",
+        "operationId": "apiApproveForm",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/apiApproveFormRequest"
+              },
+              "example": {
+                "id": 2,
+                "comment": "Very good"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/forms": {
+      "post": {
+        "tags": [
+          "Forms"
+        ],
+        "summary": "apiCreateForm",
+        "operationId": "apiCreateForm",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/apiCreateFormRequest"
+              },
+              "example": {
+                "typeForm": "Probationary",
+                "title": "Employee",
+                "unit": "EDU",
+                "managerId": 2,
+                "startDate": "2021-05-06",
+                "endDate": "2021-11-30",
+                "UserId": 4
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      },
+      "put": {
+        "tags": [
+          "Forms"
+        ],
+        "summary": "apiSubmittedForm",
+        "operationId": "apiSubmittedForm",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/apiSubmittedFormRequest"
+              },
+              "example": {
+                "id": 1,
+                "content": "Testing api...."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      },
+      "get": {
+        "tags": [
+          "Forms"
+        ],
+        "summary": "apiGetFormMySelf",
+        "operationId": "apiGetFormMySelf",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/forms/pending": {
+      "put": {
+        "tags": [
+          "Forms"
+        ],
+        "summary": "apiPendingApprovalForm",
+        "operationId": "apiPendingApprovalForm",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/apiPendingApprovalFormRequest"
+              },
+              "example": {
+                "id": 1
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/forms/subordinates": {
+      "get": {
+        "tags": [
+          "Forms"
+        ],
+        "summary": "apiGetFormSubordinates",
+        "operationId": "apiGetFormSubordinates",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/forms/all": {
+      "get": {
+        "tags": [
+          "Forms"
+        ],
+        "summary": "apiGetFormAll",
+        "operationId": "apiGetFormAll",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/forms/confirm": {
+      "put": {
+        "tags": [
+          "Forms"
+        ],
+        "summary": "apiConfirmFormByHr",
+        "operationId": "apiConfirmFormByHr",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/apiConfirmFormByHrRequest"
+              },
+              "example": {
+                "id": 2
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/forms/undone/probationary": {
+      "get": {
+        "tags": [
+          "Forms"
+        ],
+        "summary": "apiGetUndoneProbationary",
+        "operationId": "apiGetUndoneProbationary",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/forms/done/probationary": {
+      "get": {
+        "tags": [
+          "Forms"
+        ],
+        "summary": "apiGetDoneProbationary",
+        "operationId": "apiGetDoneProbationary",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/forms/done/assessment": {
+      "get": {
+        "tags": [
+          "Forms"
+        ],
+        "summary": "apiGetDoneAssessment",
+        "operationId": "apiGetDoneAssessment",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/forms/undone/assessment": {
+      "get": {
+        "tags": [
+          "Forms"
+        ],
+        "summary": "apiGetUndoneAssessment",
+        "operationId": "apiGetUndoneAssessment",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/forms/{id}": {
+      "delete": {
+        "tags": [
+          "Forms"
+        ],
+        "summary": "apiDeleteForm",
+        "operationId": "apiDeleteForm",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/infor": {
+      "get": {
+        "tags": [
+          "Information"
+        ],
+        "summary": "apiGetInfor",
+        "operationId": "apiGetInfor",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      },
+      "post": {
+        "tags": [
+          "Information"
+        ],
+        "summary": "apiCreateInfor",
+        "operationId": "apiCreateInfor",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/apiCreateInforRequest"
+              },
+              "example": {
+                "employeeCode": "NV2",
+                "firstName": "Hoang",
+                "lastName": "Minh",
+                "dob": "2000-05-04",
+                "email": "dien.hk.780@aptechlearning.edu.vn",
+                "phone": "0986554445",
+                "address": "Ha Nam",
+                "avatar": "hinhanh1.jpg",
+                "identityCard": "12345667888",
+                "insuranceNumber": "123454666677",
+                "dependent": "4"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      },
+      "put": {
+        "tags": [
+          "Information"
+        ],
+        "summary": "apiUpdateInfor",
+        "operationId": "apiUpdateInfor",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/apiUpdateInforRequest"
+              },
+              "example": {
+                "employeeCode": "NV2",
+                "firstName": "Hoang",
+                "lastName": "Minh",
+                "dob": "2000-05-08",
+                "email": "dien.hk.780@aptechlearning.edu.vn",
+                "phone": "0986554445",
+                "address": "Ha Nam",
+                "identityCard": "12345667888",
+                "insuranceNumber": "123454666677",
+                "dependent": "4"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/infor/avatar": {
+      "put": {
+        "tags": [
+          "Information"
+        ],
+        "summary": "apiUpdateAvatar",
+        "operationId": "apiUpdateAvatar",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "encoding": {},
+              "schema": {
+                "required": [
+                  "avatar"
+                ],
+                "type": "object",
+                "properties": {
+                  "avatar": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/create": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "apiCreateUser",
+        "operationId": "apiCreateUser",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/apiCreateUserRequest"
+              },
+              "example": {
+                "username": "uknow6",
+                "password": "123456",
+                "repassword": "123456"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "apiLoginUser",
+        "operationId": "apiLoginUser",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/apiLoginUserRequest"
+              },
+              "example": {
+                "username": "uknow3",
+                "password": "123456"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/users/{id}": {
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "apiUpdateRole",
+        "operationId": "apiUpdateRole",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/apiUpdateRoleRequest"
+              },
+              "example": {
+                "role": "Manager"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      },
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "apiDeleteUser",
+        "operationId": "apiDeleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 6
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/users": {
+      "patch": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "apiChangePassword",
+        "operationId": "apiChangePassword",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/apiChangePasswordRequest"
+              },
+              "example": {
+                "password": "123456"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      },
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "apiGetAllUser",
+        "operationId": "apiGetAllUser",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "apiApproveFormRequest": {
+        "title": "apiApproveFormRequest",
+        "required": [
+          "id",
+          "comment"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "comment": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "id": 2,
+          "comment": "Very good"
+        }
+      },
+      "apiCreateFormRequest": {
+        "title": "apiCreateFormRequest",
+        "required": [
+          "typeForm",
+          "title",
+          "unit",
+          "managerId",
+          "startDate",
+          "endDate",
+          "UserId"
+        ],
+        "type": "object",
+        "properties": {
+          "typeForm": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "managerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "startDate": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string"
+          },
+          "UserId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "example": {
+          "typeForm": "Probationary",
+          "title": "Employee",
+          "unit": "EDU",
+          "managerId": 2,
+          "startDate": "2021-05-06",
+          "endDate": "2021-11-30",
+          "UserId": 4
+        }
+      },
+      "apiSubmittedFormRequest": {
+        "title": "apiSubmittedFormRequest",
+        "required": [
+          "id",
+          "content"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "id": 1,
+          "content": "Testing api...."
+        }
+      },
+      "apiPendingApprovalFormRequest": {
+        "title": "apiPendingApprovalFormRequest",
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "example": {
+          "id": 1
+        }
+      },
+      "apiConfirmFormByHrRequest": {
+        "title": "apiConfirmFormByHrRequest",
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "example": {
+          "id": 2
+        }
+      },
+      "apiCreateInforRequest": {
+        "title": "apiCreateInforRequest",
+        "required": [
+          "employeeCode",
+          "firstName",
+          "lastName",
+          "dob",
+          "email",
+          "phone",
+          "address",
+          "avatar",
+          "identityCard",
+          "insuranceNumber",
+          "dependent"
+        ],
+        "type": "object",
+        "properties": {
+          "employeeCode": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "dob": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "identityCard": {
+            "type": "string"
+          },
+          "insuranceNumber": {
+            "type": "string"
+          },
+          "dependent": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "employeeCode": "NV2",
+          "firstName": "Hoang",
+          "lastName": "Minh",
+          "dob": "2000-05-04",
+          "email": "dien.hk.780@aptechlearning.edu.vn",
+          "phone": "0986554445",
+          "address": "Ha Nam",
+          "avatar": "hinhanh1.jpg",
+          "identityCard": "12345667888",
+          "insuranceNumber": "123454666677",
+          "dependent": "4"
+        }
+      },
+      "apiUpdateInforRequest": {
+        "title": "apiUpdateInforRequest",
+        "required": [
+          "employeeCode",
+          "firstName",
+          "lastName",
+          "dob",
+          "email",
+          "phone",
+          "address",
+          "identityCard",
+          "insuranceNumber",
+          "dependent"
+        ],
+        "type": "object",
+        "properties": {
+          "employeeCode": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "dob": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "identityCard": {
+            "type": "string"
+          },
+          "insuranceNumber": {
+            "type": "string"
+          },
+          "dependent": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "employeeCode": "NV2",
+          "firstName": "Hoang",
+          "lastName": "Minh",
+          "dob": "2000-05-08",
+          "email": "dien.hk.780@aptechlearning.edu.vn",
+          "phone": "0986554445",
+          "address": "Ha Nam",
+          "identityCard": "12345667888",
+          "insuranceNumber": "123454666677",
+          "dependent": "4"
+        }
+      },
+      "apiCreateUserRequest": {
+        "title": "apiCreateUserRequest",
+        "required": [
+          "username",
+          "password",
+          "repassword"
+        ],
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "repassword": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "username": "uknow6",
+          "password": "123456",
+          "repassword": "123456"
+        }
+      },
+      "apiLoginUserRequest": {
+        "title": "apiLoginUserRequest",
+        "required": [
+          "username",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "username": "uknow3",
+          "password": "123456"
+        }
+      },
+      "apiUpdateRoleRequest": {
+        "title": "apiUpdateRoleRequest",
+        "required": [
+          "role"
+        ],
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "role": "Manager"
+        }
+      },
+      "apiChangePasswordRequest": {
+        "title": "apiChangePasswordRequest",
+        "required": [
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "password": "123456"
+        }
+      }
+    },
+    "securitySchemes": {
+      "httpBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "security": [
+    {
+      "httpBearer": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Forms"
+    },
+    {
+      "name": "Information"
+    },
+    {
+      "name": "Users"
+    }
+  ]
+}
